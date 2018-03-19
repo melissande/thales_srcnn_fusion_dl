@@ -9,16 +9,48 @@ CAREFUL: this code has to be run on GPU as it's heavy computation
 
 # 0) Setting up the environment
 
+Requirement: having conda installed
 from linux terminal in the folder SRCNN_FUSION/
 
 ```sh
-$conda env create -f env_srcnn_fusion.yml
-$source activate special_course_jmg
+$ conda create -n env_thales python=3.6 numpy pip
+$ source activate env_thales
+$ pip install scipy
+$ pip install matplotlib
+$ pip install h5py
+$ pip install tensorflow-gpu 
+$ conda install -c menpo opencv
 ```
-Then, install tensorflow on gpu (version depends on server used) with the conda virtual environment special_course_jmg (see tensorflow documentation online)
-Then, install imgaug: 
+pay attention to the cuda version installed, you need to know what version of tensorflow-gpu and cuda/cdnn is corresponding to add it to the bashrc 
+
+### Add to bashrc for TensorFlow 1.5 is expecting Cuda 9.0 ( NOT 9.1 ), as well as cuDNN 7
 ```sh
-$sudo pip install git+https://github.com/aleju/imgaug
+export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+export PATH=/usr/local/cuda-9.0/bin:$PATH
+export CUDA_HOME=/usr/local/cuda-9.0
+export LD_LIBRARY_PATH=/usr/local/cuDNNv7.0-8/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+```
+### For data augmentation
+Run
+```sh
+$ pip install git+https://github.com/aleju/imgaug
+```
+
+### Create jupyter notebook
+#### For installing jupyter notebook
+```sh
+$pip install ipykernel
+$python -m ipykernel install --user --name=env_dhi
+```
+
+#### On the cluster
+```sh
+$CUDA_VISIBLE_DEVICES=0 jupyter notebook --no-browser --port=8888
+```
+#### From local machine
+```sh
+$ssh -N -f -L localhost:8881:localhost:8888 s161362@mnemosyne.compute.dtu.dk
 ```
 
 # 1) Extract the patches =subset of images
@@ -42,7 +74,7 @@ Check the amount of subimages created in each of the images_i folders for PAN_FO
 
 
 
-# 2) Build the patches
+# 2) Build the dataset
 
 In the folder SRCNN_FUSION/, create 3 folders: TRAINING, VALIDATION and VERIFICATION 
 
@@ -134,5 +166,5 @@ x w y h allows to crop the image to see the results as they are really big! For 
 The true image and the estimation are saved in MODEL_FINAL/TEST_SAVE. 
 
 # 5) Jupyter Notebook
-The script simple_cnn_baseline.py  is to be run from terminal using gpu but it can also be done from jupyter notebook and that’s why a jupiter notebook (simple_cnn_basline_nb.ipynb) is available. Go to the main, where it’s written ‘Configuration to tune’ to set training or prediction, restore model, dimensions of the crop for the image to predict etc.   
+The script simple_cnn_baseline.py  is to be run from terminal using gpu but it can also be done from jupyter notebook and that’s why a jupyter notebook (simple_cnn_basline_nb.ipynb) is available. Go to the main, where it’s written ‘Configuration to tune’ to set training or prediction, restore model, dimensions of the crop for the image to predict etc.   
 
