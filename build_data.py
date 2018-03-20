@@ -65,7 +65,7 @@ if __name__ == '__main__':
         print('Data read')
 
         
-        data_size=px.shape[0]#the number of patches
+        data_size=pxs.shape[0]#the number of patches
         for j in range(0,data_size):
             count=count+1
             input_=np.concatenate((pan[j,:,:,:],xs_hr[j,:,:,:]),axis=-1)
